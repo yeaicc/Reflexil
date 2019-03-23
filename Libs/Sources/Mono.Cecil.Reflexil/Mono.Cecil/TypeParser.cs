@@ -144,13 +144,7 @@ namespace Mono.Cecil {
 
 		static void Add<T> (ref T [] array, T item)
 		{
-			if (array == null) {
-				array = new [] { item };
-				return;
-			}
-
-			array = array.Resize (array.Length + 1);
-			array [array.Length - 1] = item;
+			array = array.Add (item);
 		}
 
 		int [] ParseSpecs ()
@@ -240,20 +234,24 @@ namespace Mono.Cecil {
 			return fullname.Substring (start, position - start);
 		}
 
-		public static TypeReference ParseType (ModuleDefinition module, string fullname)
+		public static TypeReference ParseType (ModuleDefinition module, string fullname, bool typeDefinitionOnly = false)
 		{
 			if (string.IsNullOrEmpty (fullname))
 				return null;
 
 			var parser = new TypeParser (fullname);
-			return GetTypeReference (module, parser.ParseType (true));
+			return GetTypeReference (module, parser.ParseType (true), typeDefinitionOnly);
 		}
 
-		static TypeReference GetTypeReference (ModuleDefinition module, Type type_info)
+		static TypeReference GetTypeReference (ModuleDefinition module, Type type_info, bool type_def_only)
 		{
 			TypeReference type;
-			if (!TryGetDefinition (module, type_info, out type))
+			if (!TryGetDefinition (module, type_info, out type)) {
+				if (type_def_only)
+					return null;
+
 				type = CreateReference (type_info, module, GetMetadataScope (module, type_info));
+			}
 
 			return CreateSpecs (type, type_info);
 		}
@@ -302,7 +300,7 @@ namespace Mono.Cecil {
 			var instance_arguments = instance.GenericArguments;
 
 			for (int i = 0; i < generic_arguments.Length; i++)
-				instance_arguments.Add (GetTypeReference (type.Module, generic_arguments [i]));
+				instance_arguments.Add (GetTypeReference (type.Module, generic_arguments [i], false));
 
 			return instance;
 		}
@@ -404,13 +402,13 @@ namespace Mono.Cecil {
 			return false;
 		}
 
-		public static string ToParseable (TypeReference type)
+		public static string ToParseable (TypeReference type, bool top_level = true)
 		{
 			if (type == null)
 				return null;
 
 			var name = new StringBuilder ();
-			AppendType (type, name, true, true);
+			AppendType (type, name, true, top_level);
 			return name.ToString ();
 		}
 
@@ -426,7 +424,9 @@ namespace Mono.Cecil {
 
 		static void AppendType (TypeReference type, StringBuilder name, bool fq_name, bool top_level)
 		{
-			var declaring_type = type.DeclaringType;
+			var element_type = type.GetElementType ();
+
+			var declaring_type = element_type.DeclaringType;
 			if (declaring_type != null) {
 				AppendType (declaring_type, name, false, top_level);
 				name.Append ('+');
@@ -438,7 +438,7 @@ namespace Mono.Cecil {
 				name.Append ('.');
 			}
 
-			AppendNamePart (type.GetElementType ().Name, name);
+			AppendNamePart (element_type.Name, name);
 
 			if (!fq_name)
 				return;

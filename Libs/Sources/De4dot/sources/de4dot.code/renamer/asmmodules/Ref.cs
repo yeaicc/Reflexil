@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright (C) 2011-2014 de4dot@gmail.com
+    Copyright (C) 2011-2015 de4dot@gmail.com
 
     This file is part of de4dot.
 
@@ -31,8 +31,6 @@ namespace de4dot.code.renamer.asmmodules {
 			Index = index;
 		}
 
-		public override string ToString() {
-			return memberRef != null ? memberRef.ToString() : null;
-		}
+		public override string ToString() => memberRef?.ToString();
 	}
 }

@@ -1,4 +1,4 @@
-﻿/* Reflexil Copyright (c) 2007-2016 Sebastien LEBRETON
+﻿/* Reflexil Copyright (c) 2007-2018 Sebastien Lebreton
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -143,9 +143,7 @@ namespace Reflexil.Utils
 								return;
 
 							// Reload the assembly to have a proper Image.Filename
-							var plugin = PluginFactory.GetInstance() as BasePlugin;
-							if (plugin != null)
-								adef = plugin.LoadAssembly(dialog.FileName, false);
+							adef = PluginFactory.GetInstance().LoadAssembly(dialog.FileName, false);
 
 							using (var snform = new StrongNameForm())
 							{

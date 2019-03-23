@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright (C) 2011-2014 de4dot@gmail.com
+    Copyright (C) 2011-2015 de4dot@gmail.com
 
     This file is part of de4dot.
 
@@ -88,9 +88,7 @@ namespace de4dot.code.deobfuscators {
 
 		uint checkSum;
 
-		public void Initialize() {
-			this.checkSum = uint.MaxValue;
-		}
+		public void Initialize() => checkSum = uint.MaxValue;
 
 		public void Hash(byte[] data) {
 			if (data == null)
@@ -207,9 +205,7 @@ namespace de4dot.code.deobfuscators {
 			checkSum = (checkSum >> 8) ^ table[i];
 		}
 
-		public uint GetHash() {
-			return ~checkSum;
-		}
+		public uint GetHash() => ~checkSum;
 
 		public static uint CheckSum(byte[] data) {
 			if (data == null)

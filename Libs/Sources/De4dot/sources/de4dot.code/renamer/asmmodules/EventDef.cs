@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright (C) 2011-2014 de4dot@gmail.com
+    Copyright (C) 2011-2015 de4dot@gmail.com
 
     This file is part of de4dot.
 
@@ -25,10 +25,7 @@ namespace de4dot.code.renamer.asmmodules {
 		public MMethodDef AddMethod { get; set; }
 		public MMethodDef RemoveMethod { get; set; }
 		public MMethodDef RaiseMethod { get; set; }
-
-		public EventDef EventDef {
-			get { return (EventDef)memberRef; }
-		}
+		public EventDef EventDef => (EventDef)memberRef;
 
 		public MEventDef(EventDef eventDef, MTypeDef owner, int index)
 			: base(eventDef, owner, index) {

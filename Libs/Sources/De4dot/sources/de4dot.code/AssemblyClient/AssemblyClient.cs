@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright (C) 2011-2014 de4dot@gmail.com
+    Copyright (C) 2011-2015 de4dot@gmail.com
 
     This file is part of de4dot.
 
@@ -31,25 +31,11 @@ namespace de4dot.code.AssemblyClient {
 		IAssemblyService service;
 		DateTime serverLoadedTime;
 
-		public IAssemblyService Service {
-			get { return service; }
-		}
-
-		public IStringDecrypterService StringDecrypterService {
-			get { return (IStringDecrypterService)service; }
-		}
-
-		public IMethodDecrypterService MethodDecrypterService {
-			get { return (IMethodDecrypterService)service; }
-		}
-
-		public IGenericService GenericService {
-			get { return (IGenericService)service; }
-		}
-
-		public AssemblyClient(IAssemblyServerLoader loader) {
-			this.loader = loader;
-		}
+		public IAssemblyService Service => service;
+		public IStringDecrypterService StringDecrypterService => (IStringDecrypterService)service;
+		public IMethodDecrypterService MethodDecrypterService => (IMethodDecrypterService)service;
+		public IGenericService GenericService => (IGenericService)service;
+		public AssemblyClient(IAssemblyServerLoader loader) => this.loader = loader;
 
 		public void Connect() {
 			loader.LoadServer();

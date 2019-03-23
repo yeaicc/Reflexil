@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright (C) 2011-2014 de4dot@gmail.com
+    Copyright (C) 2011-2015 de4dot@gmail.com
 
     This file is part of de4dot.
 
@@ -23,18 +23,14 @@ namespace de4dot.code {
 	public class TheAssemblyResolver : AssemblyResolver {
 		public static readonly TheAssemblyResolver Instance = new TheAssemblyResolver();
 
-		public TheAssemblyResolver() {
-			EnableTypeDefCache = true;
-		}
+		public TheAssemblyResolver() => EnableTypeDefCache = true;
 
 		public void AddSearchDirectory(string dir) {
 			if (!PostSearchPaths.Contains(dir))
 				PostSearchPaths.Add(dir);
 		}
 
-		public void AddModule(ModuleDef module) {
-			AddToCache(module.Assembly);
-		}
+		public void AddModule(ModuleDef module) => AddToCache(module.Assembly);
 
 		public void RemoveModule(ModuleDef module) {
 			var assembly = module.Assembly;

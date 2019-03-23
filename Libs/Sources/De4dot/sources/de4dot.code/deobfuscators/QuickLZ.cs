@@ -13,9 +13,7 @@ using System;
 
 namespace de4dot.code.deobfuscators {
 	public class QuickLZBase {
-		protected static uint Read32(byte[] data, int index) {
-			return BitConverter.ToUInt32(data, index);
-		}
+		protected static uint Read32(byte[] data, int index) => BitConverter.ToUInt32(data, index);
 
 		// Can't use Array.Copy() when data overlaps so here's one that works
 		protected static void Copy(byte[] src, int srcIndex, byte[] dst, int dstIndex, int size) {
@@ -122,12 +120,10 @@ namespace de4dot.code.deobfuscators {
 			return BitConverter.ToInt32(data, 0) == DEFAULT_QCLZ_SIG;
 		}
 
-		public static byte[] Decompress(byte[] inData) {
-			return Decompress(inData, DEFAULT_QCLZ_SIG);
-		}
+		public static byte[] Decompress(byte[] inData) => Decompress(inData, DEFAULT_QCLZ_SIG);
 
 		public static byte[] Decompress(byte[] inData, int sig) {
-			int mode = BitConverter.ToInt32(inData, 4);
+			/*int mode =*/ BitConverter.ToInt32(inData, 4);
 			int compressedLength = BitConverter.ToInt32(inData, 8);
 			int decompressedLength = BitConverter.ToInt32(inData, 12);
 			bool isDataCompressed = BitConverter.ToInt32(inData, 16) == 1;

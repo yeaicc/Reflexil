@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright (C) 2011-2014 de4dot@gmail.com
+    Copyright (C) 2011-2015 de4dot@gmail.com
 
     This file is part of de4dot.
 
@@ -28,13 +28,8 @@ namespace de4dot.code.deobfuscators.CryptoObfuscator {
 		TypeDef antiDebuggerType;
 		MethodDef antiDebuggerMethod;
 
-		public TypeDef Type {
-			get { return antiDebuggerType; }
-		}
-
-		public MethodDef Method {
-			get { return antiDebuggerMethod; }
-		}
+		public TypeDef Type => antiDebuggerType;
+		public MethodDef Method => antiDebuggerMethod;
 
 		public AntiDebugger(ModuleDefMD module, ISimpleDeobfuscator simpleDeobfuscator, IDeobfuscator deob) {
 			this.module = module;

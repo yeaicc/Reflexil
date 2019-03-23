@@ -44,6 +44,7 @@ namespace Mono.Cecil.Rocks {
 
 		class ParseContext {
 			public CodeReader Code { get; set; }
+			public int Position { get; set; }
 			public MetadataReader Metadata { get; set; }
 			public Collection<VariableDefinition> Variables { get; set; }
 			public IILVisitor Visitor { get; set; }
@@ -58,10 +59,16 @@ namespace Mono.Cecil.Rocks {
 			if (!method.HasBody || !method.HasImage)
 				throw new ArgumentException ();
 
+			method.Module.Read (method, (m, _) => {
+				ParseMethod (m, visitor);
+				return true;
+			});
+		}
+
+		static void ParseMethod (MethodDefinition method, IILVisitor visitor)
+		{
 			var context = CreateContext (method, visitor);
 			var code = context.Code;
-
-			code.MoveTo (method.RVA);
 
 			var flags = code.ReadByte ();
 
@@ -71,20 +78,24 @@ namespace Mono.Cecil.Rocks {
 				ParseCode (code_size, context);
 				break;
 			case 0x3: // fat
-				code.position--;
+				code.Advance (-1);
 				ParseFatMethod (context);
 				break;
 			default:
 				throw new NotSupportedException ();
 			}
+
+			code.MoveBackTo (context.Position);
 		}
 
 		static ParseContext CreateContext (MethodDefinition method, IILVisitor visitor)
 		{
-			var code = method.Module.Read (method, (_, reader) => new CodeReader (reader.image.MetadataSection, reader));
+			var code = method.Module.Read (method, (_, reader) => reader.code);
+			var position = code.MoveTo (method);
 
 			return new ParseContext {
 				Code = code,
+				Position = position,
 				Metadata = code.reader,
 				Visitor = visitor,
 			};
@@ -110,10 +121,10 @@ namespace Mono.Cecil.Rocks {
 			var metadata = context.Metadata;
 			var visitor = context.Visitor;
 
-			var start = code.position;
+			var start = code.Position;
 			var end = start + code_size;
 
-			while (code.position < end) {
+			while (code.Position < end) {
 				var il_opcode = code.ReadByte ();
 				var opcode = il_opcode != 0xfe
 					? OpCodes.OneByteOpCode [il_opcode]

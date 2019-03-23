@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright (C) 2011-2014 de4dot@gmail.com
+    Copyright (C) 2011-2015 de4dot@gmail.com
 
     This file is part of de4dot.
 
@@ -39,8 +39,7 @@ namespace de4dot.code.AssemblyClient {
 				throw new ApplicationException("Server is already loaded");
 
 			var psi = new ProcessStartInfo {
-				Arguments = string.Format("{0} {1} {2}", (int)serviceType,
-							Utils.ShellEscape(ipcName), Utils.ShellEscape(ipcUri)),
+				Arguments = $"{(int)serviceType} {Utils.ShellEscape(ipcName)} {Utils.ShellEscape(ipcUri)}",
 				CreateNoWindow = true,
 				ErrorDialog = false,
 				FileName = filename,

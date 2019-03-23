@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright (C) 2011-2014 de4dot@gmail.com
+    Copyright (C) 2011-2015 de4dot@gmail.com
 
     This file is part of de4dot.
 
@@ -29,9 +29,7 @@ using System.Reflection;
 namespace de4dot.cui {
 	class ExitException : Exception {
 		public readonly int code;
-		public ExitException(int code) {
-			this.code = code;
-		}
+		public ExitException(int code) => this.code = code;
 	}
 
 	class Program {
@@ -40,7 +38,7 @@ namespace de4dot.cui {
 		static IList<IDeobfuscatorInfo> LoadPlugin(string assembly) {
 			var plugins = new List<IDeobfuscatorInfo>();
 			try {
-				foreach (Type item in Assembly.LoadFile(assembly).GetTypes()) {
+				foreach (var item in Assembly.LoadFile(assembly).GetTypes()) {
 					var interfaces = new List<Type>(item.GetInterfaces());
 					if (item.IsClass && interfaces.Contains(typeof(IDeobfuscatorInfo)))
 						plugins.Add((IDeobfuscatorInfo)Activator.CreateInstance(item));
@@ -72,6 +70,7 @@ namespace de4dot.cui {
 				new de4dot.code.deobfuscators.CodeFort.DeobfuscatorInfo(),
 				new de4dot.code.deobfuscators.CodeVeil.DeobfuscatorInfo(),
 				new de4dot.code.deobfuscators.CodeWall.DeobfuscatorInfo(),
+				new de4dot.code.deobfuscators.Confuser.DeobfuscatorInfo(),
 				new de4dot.code.deobfuscators.CryptoObfuscator.DeobfuscatorInfo(),
 				new de4dot.code.deobfuscators.DeepSea.DeobfuscatorInfo(),
 				new de4dot.code.deobfuscators.Dotfuscator.DeobfuscatorInfo(),
@@ -107,9 +106,8 @@ namespace de4dot.cui {
 				Logger.Instance.CanIgnoreMessages = !HasEnv(showAllMessagesEnvName);
 
 				Logger.n("");
-				Logger.n("de4dot v{0} Copyright (C) 2011-2014 de4dot@gmail.com", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
+				Logger.n("de4dot v{0} Copyright (C) 2011-2015 de4dot@gmail.com", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
 				Logger.n("Latest version and source code: https://github.com/0xd4d/de4dot");
-				Logger.n("{0} deobfuscator modules loaded!", deobfuscatorInfos.Count);
 				Logger.n("");
 
 				var options = new FilesDeobfuscator.Options();
@@ -178,12 +176,12 @@ namespace de4dot.cui {
 		static bool IsN00bUser() {
 			if (HasEnv("VisualStudioDir"))
 				return false;
+			if (HasEnv("SHELL"))
+				return false;
 			return HasEnv("windir") && !HasEnv("PROMPT");
 		}
 
-		public static void PrintStackTrace(Exception ex) {
-			PrintStackTrace(ex, LoggerEvent.Error);
-		}
+		public static void PrintStackTrace(Exception ex) => PrintStackTrace(ex, LoggerEvent.Error);
 
 		public static void PrintStackTrace(Exception ex, LoggerEvent loggerEvent) {
 			var line = new string('-', 78);
